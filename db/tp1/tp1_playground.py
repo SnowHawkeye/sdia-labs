@@ -1,17 +1,6 @@
-def carres(n):
-  res = []
-  for i in range(n):
-    print("foo")
-    res.append(i*i)
-  return res
+from tp1 import *
 
-def flux_carres_bis(n):
-  for i in range(n):
-    print("bar")
-    yield i*i
-
-for c in carres(10):
-  print(c)
-
-for c in flux_carres_bis(10):
-  print(c)
+tb1 = table({'a': (1,1)}, nb=2)
+tb2 = table({'b': (2,2)}, nb=2)
+for tp in produit_cartesien(tb1,tb2):
+    print(tp)
