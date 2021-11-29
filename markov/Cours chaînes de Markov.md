@@ -216,7 +216,7 @@ Sinon, il est dit **récurrent nul**.
 
 #### Théorème : Caractérisation des états récurrents et transitoires
 
-1. Un état $i$ est récurrent si, et seulement si, partant de i, on reviendra presque sûrement en $i$ une infinité de fois  :
+1. Un état $i$ est récurrent si, et seulement si, partant de $i$, on reviendra presque sûrement en $i$ une infinité de fois  :
 
 $$
 i \text{ récurrent } 
@@ -322,13 +322,13 @@ Avec la convention $\pi_i = 0$ si $i$ est un état transitoire ou réccurent nul
 Alors, on a le résultat de convergence en loi suivant :
 
 $$
-\frac{1}{n} \sum_{k=1}^n X_k \xrightarrow{\mathcal{L}} \pi
+\frac{1}{n} \sum_{k=1}^n X_k \xrightarrow \mathcal{L} \pi
 $$
 
 En particulier, si $X_n$ est <u>apériodique</u>, 
 
 $$
-\mu_i^n = \mathbb{P}(X_n = i) \xrightarrow{n \rightarrow + \infty} \pi_i
+\mu_i^n = \mathbb{P}(X_n = i) \xrightarrow {n \rightarrow + \infty} \pi_i
 $$
 
 avec $\pi_i$ défini comme plus haut, et $\mu$ est l'unique mesure invariante de $X_n$.
