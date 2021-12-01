@@ -6,7 +6,7 @@ def ehrenfest(K, n_max, rng):
     Args:
         K (int): Number of particles in Ehrenfest's model.
         n_max (int): Number of steps of the Markov chain.
-        rng (numpy.random.Generator): Random generator.
+        rng (numpy.random.Generator): Random number generator.
 
     Returns:
         numpy.array: Array containing the successive states taken at each step of the simulation.
@@ -34,3 +34,30 @@ def ehrenfest(K, n_max, rng):
                 T = k
                 is_T_found = True
     return X, T
+
+
+def simulate_dthmc(P, mu, n_max, rng):
+    """Simulates the trajectory of a Markov chain for a given number of time steps.
+
+    Args:
+        P (numpy.array): Transition matrix of the Markov chain.
+        mu (numpy.array): Initial distribution.
+        n_max (int): Number of steps of the Markov chain.
+        rng (numpy.random.Generator): Random number generator.
+        
+    Returns:
+        numpy.array: Array containing the successive states taken at each step of the simulation.  
+    """
+    
+    n_state = len(mu)
+
+    X = np.zeros(n_max).astype(int) # Tableau qui contient les états successifs de la simulation
+    
+    X[0] = rng.choice(np.arange(n_state), p=mu) # On initialise l'état initial selon mu
+    
+    for k in range(1, n_max):
+        X[k] = rng.choice(np.arange(n_state), p=P[X[k-1], :]) # On passe à l'état suivant selon les probabilités de la matrice de transition
+        
+    return X
+    
+    
