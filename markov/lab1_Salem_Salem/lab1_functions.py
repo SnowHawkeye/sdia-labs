@@ -59,5 +59,37 @@ def simulate_dthmc(P, mu, n_max, rng):
         X[k] = rng.choice(np.arange(n_state), p=P[X[k-1], :]) # On passe à l'état suivant selon les probabilités de la matrice de transition
         
     return X
+
+
+def simulate_dthmc_until_return(P, mu, rng):
+    """Simulates the trajectory of a Markov chain until it returns to its initial state.
+
+    Args:
+        P (numpy.array): Transition matrix of the Markov chain.
+        mu (numpy.array): Initial distribution.
+        rng (numpy.random.Generator): Random number generator.
+        
+    Returns:
+        numpy.array: Array containing the successive states taken at each step of the simulation.  
+        int: Return time to initial state.
+    """
+    
+    n_state = len(mu)
+
+    X = [] # Liste qui contient les états successifs de la simulation
+    # Comme on ne sait pas combien d'étapes il y aura, on ne peut pas utiliser un array
+    
+    initial_state = rng.choice(np.arange(n_state), p=mu) # On initialise l'état initial selon mu
+    X.append(initial_state) 
+    
+    k = 1
+    
+    while True : # Il faut rentrer une première fois dans la boucle
+        next_state = rng.choice(np.arange(n_state), p=P[X[k-1], :])
+        X.append(next_state) # On passe à l'état suivant selon les probabilités de la matrice de transition
+        if(next_state == initial_state): break # Si on est retourné à l'état initial, on arrête la simulation
+        k += 1
+        
+    return np.array(X), k
     
     
