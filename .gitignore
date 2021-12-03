@@ -142,3 +142,4 @@ cython_debug/
 
 # Labs-related
 db/tp1/tmp/
+.pytest_cache/
