@@ -332,3 +332,127 @@ $$
 $$
 
 avec $\pi_i$ défini comme plus haut, et $\mu$ est l'unique mesure invariante de $X_n$.
+
+
+
+## Méthodes de Monte-Carlo fondées sur les chaînes de Markov
+
+### Condition de Doeblin
+
+#### Définition : Condition de Doeblin
+
+Soit $X_n$ une CDM de matrice de transition $P$. La **condition de Doeblin** est vérifiée s'il existe une probabilité $\pi$ et une constante $C > 0$ telles que :
+
+$$
+p_{ij} \geq C \pi_j
+$$
+
+On peut montrer l'équivalence avec une condition plus faible : 
+
+$$
+\exists l \in \mathbb Z / (P^l)_{ij} \geq c \pi_j
+$$
+
+
+
+#### Théorème : Existence d'une probabilité invariante
+
+Si la CDM $X_n$ vérifie la condition de Doeblin, alors elle admet une unique probabilité invariante.
+
+
+
+### Algorithme de Metropolis-Hastings
+
+L'objectif est d'approcher (d'échantilloner selon) une mesure de probabilité inconnue $\pi$ sur un ensemble d'états $\mathcal S$ fini (de cardinal grand).
+
+On suppose connue une mesure invariante $f = \kappa \pi$ où $\kappa$ est un réel inconnu.
+
+Pour l'algorithme, on a besoin de définir une matrice de transition permettant de visiter les différents sites (états). Cette matrice notée $Q$ vérifie :
+
+$$
+q_{ij} > 0 \iff q_{ji} >0
+$$
+
+En pratique, on choisit $Q$ symétrique.
+
+On définit également une relation d'équivalence : $i$ et $j$ sont dits voisins si $q_{ij} > 0$.
+
+En supposant $f$ donnée, on pose :
+
+$$
+\alpha_{ij} = \min \left( 1,\frac{f_j q_{ji}}{f_i q_{ij}} \right)
+$$
+
+et on peut alors assembler une matrice stochastique $P$ : 
+
+$$
+\begin{cases}
+p_{ij} = \alpha_{ij} q_{ij} & \text{si $i$ et $j$ sont voisins} \\
+p_{ii} = 1 - \sum_{j \neq i} p_{ij} & \text{sinon}
+\end{cases}
+$$
+
+
+
+#### Propositions : Résultats de convergence
+
+Avec les notations ci-dessus : 
+
+- La CDM $X_n$ associée à $P$ admet $\pi$ comme probabilité invariante.
+
+- Si $Q$ vérifie la condition de Doeblin, alors $P$ vérifie également cette condition.
+
+
+
+#### Algorithme : Metropolis-Hastings
+
+L'algorithme est le suivant : 
+
+- On initialise $X_n$ à un état $i$ donné.
+
+- A chaque itération, on choisit aléatoirement un état $j$ candidat pour $X_{n+1}$ à partir de la distribution $q_{ij}$. On tire alors un nombre uniformément aléatoire $v \in [0,1]$ et on calcule le **taux d'acceptation** $\alpha_{ij}$. Alors : 
+
+$$
+\begin{cases}
+\text{si } v \leq \alpha_{ij} & X_{n+1} = j \\
+\text{si } v >    \alpha_{ij} & X_{n+1} = i \\
+\end{cases}
+$$
+
+Pour $Q$ symétrique, le rapport $\frac{f_j q_{ji}}{f_i q_{ij}}$ devient simplement $\frac{\pi_j}{\pi_i}$.  Le calcul de ce rapport ne nécessite pas nécessairement la connaissance des valeurs des $\pi_i$.
+
+
+
+### Algorithme du recuit simulé
+
+On considère un paramètre $\theta$ ("température") qui permet de faire évoluer l'état du système.
+
+L'algorithme consiste à appliquer l'algorithme de Metropolis-Hastings à température constante pendant un certain nombre d'étapes, puis à faire diminuer la température. 
+
+La mesure utilisée est la mesure de Gibbs : 
+
+$$
+\mu_{\theta}(j) = \frac{1}{Z_{\theta}} \exp \left(- \frac{\mathcal H(j)}{\theta} \right)
+$$
+
+Avec :
+
+- $\mathcal H$ une fonction de $\mathcal S$ (fini) dans $\mathbb R$ appelée **énergie**.
+
+-  $Z_{\theta}$ est une constante de normalisation appelée <u>fonction de partition</u>.
+
+On peut prouver qu'on a bien convergence lorsque $n \rightarrow +\infty$ et $\theta \rightarrow 0^+$.
+
+En particulier :
+
+$$
+\mu_{\theta} \xrightarrow{\theta \rightarrow 0} \frac{1}{\#\mathcal M}
+$$
+
+où $\mathcal M$ est le nombre de minimiseurs de $\mathcal H$.
+
+On utilise 
+
+$$
+\theta_n = \frac{\text{cste}}{n}
+$$
