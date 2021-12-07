@@ -8,40 +8,6 @@ Utilitaires :
 
 - [Mermaid flowcharts](https://mermaid-js.github.io/mermaid/#/flowchart)
 
-## Sommaire
-
-- [Chaînes de Markov à temps discret](#cha-nes-de-markov---temps-discret)
-  * [Cadre](#cadre)
-    + [Définition : Chaîne de Markov](#d-finition---cha-ne-de-markov)
-  * [Matrice de transition d'une chaîne de Markov](#matrice-de-transition-d-une-cha-ne-de-markov)
-    + [Définition : Chaîne de Markov homogène](#d-finition---cha-ne-de-markov-homog-ne)
-    + [Propriétés élémentaires de la matrice de transition](#propri-t-s--l-mentaires-de-la-matrice-de-transition)
-    + [Graphe associé à une chaîne de Markov](#graphe-associ----une-cha-ne-de-markov)
-    + [Définition : Chemin](#d-finition---chemin)
-  * [Classes d'équivalence](#classes-d--quivalence)
-    + [Définition : Classe de communication (CdC)](#d-finition---classe-de-communication--cdc-)
-    + [Définition : Chaîne de Markov irréductible](#d-finition---cha-ne-de-markov-irr-ductible)
-    + [Définition : Classe de communication fermée](#d-finition---classe-de-communication-ferm-e)
-    + [Propriété : Restriction d'une CDM à une CdC fermée](#propri-t----restriction-d-une-cdm---une-cdc-ferm-e)
-    + [Définition : Etat absorbant](#d-finition---etat-absorbant)
-  * [Etats récurrents et transitoires](#etats-r-currents-et-transitoires)
-    + [Définition : Temps d'atteinte](#d-finition---temps-d-atteinte)
-    + [Définition : Etats récurrents et transitoires](#d-finition---etats-r-currents-et-transitoires)
-    + [Théorème : Caractérisation des états récurrents et transitoires](#th-or-me---caract-risation-des--tats-r-currents-et-transitoires)
-    + [Corollaire : Classes de communication récurrentes et transitoires](#corollaire---classes-de-communication-r-currentes-et-transitoires)
-    + [Proposition : Classes récurrentes et classes fermées](#proposition---classes-r-currentes-et-classes-ferm-es)
-- [Limite d'une chaîne de Markov](#limite-d-une-cha-ne-de-markov)
-  * [Notion de périodicité d'une chaîne de Markov](#notion-de-p-riodicit--d-une-cha-ne-de-markov)
-    + [Définition : Chaîne de Markov périodique](#d-finition---cha-ne-de-markov-p-riodique)
-  * [Mesures invariantes](#mesures-invariantes)
-    + [Définition : Mesure invariante](#d-finition---mesure-invariante)
-    + [Cas particulier important : chaînes de Markov réversibles](#cas-particulier-important---cha-nes-de-markov-r-versibles)
-  * [Théorèmes limites pour une chaîne de Markov](#th-or-mes-limites-pour-une-cha-ne-de-markov)
-    + [Théorème : Existence d'une mesure invariante](#th-or-me---existence-d-une-mesure-invariante)
-    + [Théorème ergodique](#th-or-me-ergodique)
-
----
-
 ## Chaînes de Markov à temps discret
 
 ### Cadre
@@ -333,8 +299,6 @@ $$
 
 avec $\pi_i$ défini comme plus haut, et $\mu$ est l'unique mesure invariante de $X_n$.
 
-
-
 ## Méthodes de Monte-Carlo fondées sur les chaînes de Markov
 
 ### Condition de Doeblin
@@ -353,13 +317,9 @@ $$
 \exists l \in \mathbb Z / (P^l)_{ij} \geq c \pi_j
 $$
 
-
-
 #### Théorème : Existence d'une probabilité invariante
 
 Si la CDM $X_n$ vérifie la condition de Doeblin, alors elle admet une unique probabilité invariante.
-
-
 
 ### Algorithme de Metropolis-Hastings
 
@@ -392,8 +352,6 @@ p_{ii} = 1 - \sum_{j \neq i} p_{ij} & \text{sinon}
 \end{cases}
 $$
 
-
-
 #### Propositions : Résultats de convergence
 
 Avec les notations ci-dessus : 
@@ -401,8 +359,6 @@ Avec les notations ci-dessus :
 - La CDM $X_n$ associée à $P$ admet $\pi$ comme probabilité invariante.
 
 - Si $Q$ vérifie la condition de Doeblin, alors $P$ vérifie également cette condition.
-
-
 
 #### Algorithme : Metropolis-Hastings
 
@@ -421,8 +377,6 @@ $$
 
 Pour $Q$ symétrique, le rapport $\frac{f_j q_{ji}}{f_i q_{ij}}$ devient simplement $\frac{\pi_j}{\pi_i}$.  Le calcul de ce rapport ne nécessite pas nécessairement la connaissance des valeurs des $\pi_i$.
 
-
-
 ### Algorithme du recuit simulé
 
 On considère un paramètre $\theta$ ("température") qui permet de faire évoluer l'état du système.
@@ -439,7 +393,7 @@ Avec :
 
 - $\mathcal H$ une fonction de $\mathcal S$ (fini) dans $\mathbb R$ appelée **énergie**.
 
--  $Z_{\theta}$ est une constante de normalisation appelée <u>fonction de partition</u>.
+- $Z_{\theta}$ est une constante de normalisation appelée <u>fonction de partition</u>.
 
 On peut prouver qu'on a bien convergence lorsque $n \rightarrow +\infty$ et $\theta \rightarrow 0^+$.
 
