@@ -410,3 +410,238 @@ On utilise
 $$
 \theta_n = \frac{\text{cste}}{n}
 $$
+
+
+
+## Processus de Poisson à temps continu
+
+### Processus de Markov à temps continu
+
+#### Définition : Processus de Markov à temps continu
+
+On considère des temps $t \in \mathbb R$ continus et un ensemble d'états $\mathcal S$ fini ou dénombrable. De façon analogue à ce qu'on a vu précédemment, un processus de Markov à temps continu se définit par : 
+
+$$
+\mathbb{P}(X_{t_n} = i_n | X_{t_{n-1}} = i_{n-1}, \ldots, X_{t_0} = i_0) 
+= \mathbb{P}(X_{t_n} = i_n | X_{t_{n-1}} = i_{n-1})
+$$
+
+Et on ne considèrera que des processus homogènes.
+
+
+
+#### Matrice de transition
+
+Soit $\nu^t$ la loi d'un processus de Markov homogène $X_t$ :
+
+$$
+\exists P(t) / \nu^t = \nu^0 P(t) \text{ et } \mathbb P(X_t = j | X_0 = i) = P_{ij}(t)
+$$
+
+Pour un processus homogène on a la **propriété de semi-groupe** :
+
+$$
+\begin{cases}
+P(t+s) = P(t)P(s) \\
+P(0) = Id
+\end{cases}
+$$
+
+Si $\mathcal S$ est fini, on peut prouver qu'il existe une matrice $A$ telle que :
+
+$$
+P(t) = e^{tA}
+$$
+
+Où on emploie l'exponentielle de matrice :
+
+$$
+e^{tA} = \sum_{n=0}^\infty \frac{t^n A^n}{n!}
+$$
+
+On appelle $A$ le **générateur infinitésimal** du processus $X_t$ et on le définit comme :
+
+$$
+A = \lim_{t \rightarrow 0^+} \frac{P(t) - Id}{t}
+$$
+
+
+
+### Comportement asymptotique des processus de Markov
+
+#### Lemme : probabilité invariante et générateur infinitésimal
+
+Une probabilité $\pi$ est dite **invariante** pour $X^t$ si :
+
+$$
+\pi = \pi P(t) \iff \pi A = 0
+$$
+
+L'équivalence ci-dessus peut être prouvée.
+
+
+
+#### Définition : irréductibilité
+
+Un PDM est dit **irréductible** si :
+
+$$
+\forall t > 0, P_{ij}(t) > 0
+$$
+
+
+
+#### Théorème ergodique
+
+Soit $X^t$ un PDM <u>irréductible</u>. On a les résultats de convergence suivants :
+
+- Une convergence "en moyenne" :
+
+$$
+\frac{1}{t} \int_0^t \chi_{\{ X_t = i \}} ds \rightarrow \pi_i
+$$
+
+- Si il existe une unique probabilité invariante $\pi$, alors on a deux cas :
+  
+  - Si le PDM est récurent positif :
+    
+    $$
+    P(X_t = i) \rightarrow \pi_i
+    $$
+  
+  - Si le PDM est récurrent nul ou transitoire : 
+    
+    $$
+    P(X_t = i) \rightarrow 0
+    $$
+  
+  On définira par la suite les états récurrents et transitoires.
+
+
+
+### Processus de Poisson à temps continu
+
+#### Définition : Processus de Poisson
+
+On considère que l'ensemble d'états est $\mathbb N$. On définit $(T_k)$ une suite de temps aléatoires i.i.d. suivant une <u>loi exponentielle</u> de paramètre $\lambda > 0$.
+
+On définit alors $S_n$ comme la somme des $T_k$ jusqu'à $n$.
+
+Un **processus de Poisson à temps continu** se définit comme :
+
+$$
+N_t = \sum_{n=1}^\infty \chi_{ \{ S_n \in [0,t] \} } 
+= \# \{ n / S_n \leq t \}
+$$
+
+En français : on reste sur une marche pendant un temps aléatoire $T_k$, au bout duquel on monte d'une marche, et on recommence. La variable $N_t$ compte le nombres de marches gravies en un temps $t$.
+
+
+
+#### Théorème : Propriétés sur les processus de Poisson
+
+- $N_t$ est suit une loi de Poisson de paramètre $\lambda t$.
+
+- Les incréments du processus sont indépendants : pour toute suite croissante $t_j$, les variables aléatoires $N_{t_{j+1}} - N_{t_{j}}$ sont indépendantes.
+
+- Les incréments sont stationnaires : $N_{t+s} - N_s \sim_{\mathcal L} N_t$.
+
+
+
+#### Définition : Chaîne de Markov induite associée au processus de Poisson
+
+On note $Y_n$ la chaîne de Markov qui donne l'endroit où l'on est après "$n$ montées de marche". 
+
+De façon générale, pour tout processus en temps continu on peut associer une **chaîne de Markov induite** $Y_n$.
+
+On notera $Q$ la matrice de transition de $Y_n$, qui contient les probabilités d'aller d'état en état. Par exemple, pour un processus de Poisson, on a juste :
+
+$$
+q_{ii+1} = 1
+$$
+
+puisqu'on ne peut que "monter les marches".
+
+
+
+#### Définition : Processus récurrent ou transitoire
+
+Soit $Y_n$ la chaîne induite d'un processus <u>irréductible</u> $X_t$. On dit alors que :
+
+- $X_t$ est **récurrent** si $Y_n$ est récurrente.
+
+- X_t est **transitoire** si $Y_n$ est transitoire.
+
+
+
+#### Proposition : Lien entre $Q$ et $A$ pour un processus de Poisson
+
+On a les relations suivantes :
+
+$$
+\forall i \neq j
+\begin{cases}
+a_{ij} = \lambda_i q_{ij} \\
+a_{ii} = - \sum_{i \neq j} a_{ij}
+\end{cases}
+$$
+
+avec $\lambda_i$ le temps moyen d'attente en $i$.
+
+
+
+#### Proposition : Loi suivie par le temps de "repos" en un site
+
+On considère un processus à saut général. On place sur chaque site $j$ un "réveil" dont le temps de sonnerie suit une loi exponentielle de paramètre $\lambda_j$.
+
+Alors : 
+
+$$
+\mathbb P(t < \min_j T_j) 
+= e^{-(\lambda_1 + \lambda_2 + \ldots + \lambda_i)t}
+$$
+
+
+
+### Processus de vie et de mort
+
+#### Définition : Processus de vie et de mort
+
+On considère qu'on a $i$ individus vivants à un instant $t$. A chaque instant on peut avoir une mort ou une naissance. On suppose que les temps de naissance et de mort suivent respectivement des lois exponentielles de paramètre $\beta_i$ et $\delta_i$.
+
+Son générateur infinitésimal $A$ est tel que :
+
+$$
+\begin{cases}
+a_{ii} = -\beta_i - \delta_i \\
+a_{ii+1} = \beta_i \\
+a_{ii-1} = \delta_i \\
+a_{ij} = 0 & \text{sinon}
+\end{cases}
+$$
+
+
+
+## Notion de file d'attente
+
+### Notation de Kendall
+
+On modélise une file d'attente par la notation :
+
+$$
+A / B / C / K
+$$
+
+Avec : 
+
+- $A$ la variable aléatoire donnant le temps d'arrivée d'un client.
+
+- $B$ la variable aléatoire donnant le temps d'exécution du travail (ou temps de service).
+
+- $C$ le nombre de serveurs.
+
+- $K$ la taille globale de la salle d'attente. Dans la suite, on prendra $K = \infty$.
+
+
+
+Lorsque $A$ et $B$ suivent des lois exponentielles, on retrouve un processus de vie (arrivée d'un client) et de mort (sortie d'un client).
