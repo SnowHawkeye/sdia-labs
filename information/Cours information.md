@@ -26,8 +26,6 @@ $$
 > 
 > A raison d'une surface de $5.10^8 \text{ mm}^2$, et de $1,5.10^{33}$ tests par seconde, il faudrait alors 4756 ans pour estimer la clé secrète.
 
-
-
 #### Objectif : Détecter une intrusion dans un réseau, détecter une information cachée (stéganalyse)
 
 On note :
@@ -70,8 +68,6 @@ $$
 > 
 > *Autres exemples* : ondes électromagnétiques (pour trouver une image affichée sur un écran), consommation d'un CPU (pour trouver une clé secrète), mouvement d'un bras (pour trouver un code PIN).
 
-
-
 ## Le *watermarking* (filigrane, tatouage)
 
 ### Définition
@@ -112,8 +108,6 @@ Le *watermarking* a plusieurs applications, parmi lesquelles :
 
 - le "traçage de traitres"
 
-
-
 ### Généralités en tatouage
 
 #### Notations
@@ -134,8 +128,6 @@ Le *watermarking* a plusieurs applications, parmi lesquelles :
 
 <img src="file:///C:/Users/Shadr/AppData/Roaming/marktext/images/2021-12-15-13-18-08-image.png" title="" alt="" data-align="center">
 
-
-
 #### Interprétation géométrique du tatouage
 
 $\mathcal D(m,k)$ : région utilisée pour coder / décoder $m$, paramétrisée par $k$, dans laquelle se trouve $y$.
@@ -147,8 +139,6 @@ $\mathcal D(m,k)$ : région utilisée pour coder / décoder $m$, paramétrisée 
 - Sécurité : capacité pour l'adversaire à estimer $\mathcal D(m,k)$
 
 Si l'adversaire veut enlever le tatouage, il doit "faire sortir" $y$ de la région de codage / décodage.
-
-
 
 ### Exemple du tatouage par étalement de spectre
 
@@ -213,5 +203,72 @@ D'où, si $m=1$, par somme :
 $$
 \langle Z, K \rangle \sim \mathcal N(\alpha, \sigma^2_X + \sigma^2_N)
 $$
+
+Si $m=2$ (2 bits), on a $k_1$ et $k_2$ avec $\langle k_1, k_2 \rangle = 0$.
+
+Et alors 
+
+$$
+y = x + w_1 + w_2
+$$
+
+avec
+
+$$
+w_i = \begin{cases}
+\alpha k_i & \text{si } m = 1 \\
+- \alpha k_i & \text{si } m = 0 \\
+\end{cases}
+$$
+
+
+
+#### Scénario de sécurité n°1
+
+- On suppose le principe de Kerckhoffs : le schéma ($m$) est connu (cadre supervisé).
+
+- $|m|=1 \text{ bit}$
+
+- L'adversaire observe un nombre de messages $N_o$ contenus tatoués et il connaît les $N_o$ messages (bits) insérés (chacun de 1 bit).
+
+- Objectif : estimer la clé secrète $k$.
+
+Si on suppose $m_1 = 1$
+
+$$
+\hat k_1 = \frac{1}{\alpha N_o} \sum y_i
+$$
+
+Solution générale : 
+
+$$
+\hat k_1 = \frac{1}{\alpha N_o} \sum -(-1^m)y_i
+$$
+
+
+
+#### Scénario de sécurité n°2
+
+- Même scénario que 1 mais $m$ est inconnu (cadre non supervisé).
+
+- $|m| = 1 \text{ bit}$
+
+On sait qu'il y a deux clusters :
+
+- On peut faire du **clustering** (*e.g.* K-means mais ne fonctionne pas bien en grande dimension).
+
+- La variance est la plus importante dans la direction de la clé secrète $k$ selon laquelle on fait la translation. On peut donc faire une **analyse en composantes principales** (PCA).
+
+
+
+#### Scénario de sécurité n°3
+
+- Comme le scénario 2 mais on insère 2 bits par contenu (et on a donc deux clés $k_1$ et $k_2$). 
+
+On peut encore penser au clustering, mais on a toujours le même problème en grande dimension. La PCA ne fonctionne pas forcément non plus car dans certains cas les clusters sont tels que la variance est la même dans toutes les directions.
+
+Par définition, les tirages $m_1$ et $m_2$ sont indépendants. On peut donc utiliser une **analyse en composantes indépendantes** (*cf.* TP et fast ICA).
+
+
 
 
