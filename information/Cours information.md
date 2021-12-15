@@ -42,6 +42,8 @@ $$
 D_{KL}(P_N, P_A) = \sum_x P_N(x) \log \frac{P_N(x)}{P_A(x)} = 0
 $$
 
+#### 
+
 #### Objectif : Estimer une clé à partir d'observations bruitées de cette clé
 
 On définit la **fuite d'information** :
@@ -58,8 +60,6 @@ $$
 I(K, O_1, \ldots, O_{N_o}) = 0
 $$
 
-
-
 > *Exemple* : $O_1 = k + u$ version bruitée de la clé $k$. On considère la loi uniforme $U$ entre -3 et 4.
 > 
 > $$
@@ -67,8 +67,6 @@ $$
 > $$
 > 
 > Pour $H(K) = 128 \text{ bits}$ on trouve $I(K, O_1) = 125 \text{ bits}$. Autrement dit, 125 bits d'information sont déjà connus.
-> 
-> 
 > 
 > *Autres exemples* : ondes électromagnétiques (pour trouver une image affichée sur un écran), consommation d'un CPU (pour trouver une clé secrète), mouvement d'un bras (pour trouver un code PIN).
 
@@ -108,8 +106,6 @@ $$
 
 - des rotations et redimensionnements
 
-
-
 Le *watermarking* a plusieurs applications, parmi lesquelles : 
 
 - la protection des droits d'auteurs
@@ -136,6 +132,8 @@ Le *watermarking* a plusieurs applications, parmi lesquelles :
 
 - Message à insérer $m$ ($N_m$ bits). C'est une constante (marque). L'objectif est de détecter et non de décoder.
 
+<img src="file:///C:/Users/Shadr/AppData/Roaming/marktext/images/2021-12-15-13-18-08-image.png" title="" alt="" data-align="center">
+
 
 
 #### Interprétation géométrique du tatouage
@@ -158,7 +156,7 @@ Si l'adversaire veut enlever le tatouage, il doit "faire sortir" $y$ de la régi
 
 - $m \in \{0,1\}$ 1 bit inséré 
 
-- $k$  vecteur de dimension $N_v$, généré pseudo-aléatoireement en utilisant un germe <u>secret</u>. $k$ sera centré : $\mathbb E[k] = 0$ et $|k| = 1$.
+- $k$  vecteur de dimension $N_v$, généré pseudo-aléatoirement en utilisant un germe <u>secret</u>. $k$ sera centré : $\mathbb E[k] = 0$ et $|k| = 1$.
 
 On pose alors :
 
@@ -179,6 +177,8 @@ L'estimation du $m$ décodé $\hat m$ vaut :
 $$
 \hat m = \frac{\text{sign} \langle y, k \rangle + 1}{2}
 $$
+
+#### 
 
 #### Robustesse
 
@@ -208,22 +208,10 @@ $$
 \end{cases}
 $$
 
-
-
 D'où, si $m=1$, par somme :
 
 $$
 \langle Z, K \rangle \sim \mathcal N(\alpha, \sigma^2_X + \sigma^2_N)
 $$
-
-
-
-
-
-
-
-
-
-
 
 

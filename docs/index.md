@@ -5,3 +5,5 @@
 - [Chaînes de Markov](cours-cdm.html)
 
 - [Décision et apprentissage](cours-da.html)
+
+- [Sécurité de l'information](cours-si.html)
