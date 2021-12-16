@@ -12,6 +12,8 @@ Les $w$ sont les paramètres de la machine, à déterminer.
 
 Le symbole ~ indique que l'on rajoute un 1 dans chaque $x_n$, et que la dimension de $w$ est augmentée de 1 en conséquence (biais). Cela permet de gérer la moyenne quand on normalise les données. 
 
+s
+
 ### Régression au sens des moindres carrés
 
 On cherche à minimiser une fonction de coût quadratique : 
@@ -32,6 +34,8 @@ Au lieu de $X$, on peut éventuellement utiliser $\varphi(x)$ pour faire un chan
 $$
 y = \tilde w \tilde \varphi(x) \text{ et } \tilde w = \tilde \Phi^{\text{\textdagger}}t
 $$
+
+
 
 ### Régression linéaire régularisée
 
@@ -60,6 +64,8 @@ $$
 w = (\Phi^T\Phi + \lambda Id)^{-1}\Phi t
 $$
 
+
+
 ### Approche bayésienne
 
 On fait l'hypothèse que les observations sont indépendantes et identiquement distributées (iid).
@@ -85,6 +91,8 @@ Et dans ce cas, le $\tilde w $ qui maximise $\mathcal L$ est le même qu'au sens
 
 L'intérêt d'avoir accès à une distribution de $w$ est qu'on peut donner la confiance qu'on a en la solution trouvée.
 
+
+
 ### Fonction de coût pour la régression
 
 Le **risque réel** se définit comme l'espérance d'une fonction de coût. 
@@ -97,9 +105,13 @@ $$
 
 Choisir une fonction de coût, c'est choisir une solution et ses propriétés. Par exemple, les moindres carrés sont sensibles aux "queues lourdes" (*outsiders*), mais pas la médiane. En revanche, la médiane est sensible à la multimodalité.
 
+
+
 ### Compromis biais-variance
 
 Plus le modèle est simple, plus le biais est grand, et plus la variance est faible. Il faut donc trouver un **compromis** entre les deux.
+
+
 
 ### Cas des dictionnaires : seuillage équivalent
 
@@ -188,18 +200,22 @@ On distingue trois familles de modèles :
 - Les **modèles génératifs** estiment $\mathbb P(x|C_k), \mathbb P(C_k)$. On peut donc générer les données soi-même. Cependant, on a posé une distribution paramétrique de $x$, qui est souvent inexacte.
   
   *Exemple : LDA*
-
-
+  
+  
 
 ### Choix du modèle
 
 Il y a là encore un compromis biais-variance à trouver. Il faut également contrôler la richesse du modèle pour éviter le sur-apprentissage (*overfitting*).
+
+
 
 #### Cas particulier des K plus proches voisins
 
 Pour K grand, on ignore les phénomènes minoritaires (peu de variance mais biais important). A l'inverse, pour K petit, on considère les minorités comme importantes (peu de biais mais variance importante). 
 
 Les K plus proches voisins sont limités avec l'augmentation de la dimension : on ne peut plus représenter la classification au delà de la 3D, le calcul de la distance peut devenir coûteux, et tous les points deviennent voisins en grande dimension.
+
+
 
 #### Conclusions générales
 
@@ -288,12 +304,14 @@ Quelques remarques sur cette méthode :
 - C'est une approximation grossière mais efficace en pratique (fort biais, faible variance). C'est dû à l'hypothèse forte d'indépendance.
 
 - Cette méthode est utile en particulier en grande dimension.
-
-
+  
+  
 
 ### Régression logistique
 
 C'est un **modèle discriminant** robuste aux *outliers*. 
+
+
 
 #### Remarques préliminaires
 
@@ -316,6 +334,8 @@ $$
 $$
 
 D'où le fait qu'on utilise cette fonction pour envoyer $\tilde w^T \tilde x \in \mathbb R$ dans $]0\text{;}1[$. La fonction tangeante hyperbolique était un autre candidat (plus utilisé par le passé).
+
+
 
 #### Application à la classification
 
@@ -412,8 +432,6 @@ $$
 z = U^Tx
 $$
 
-
-
 ### Sélection de variables
 
 Il existe différents types de stratégies (*forward, backward, mixt*) qui permettent toutes de garder les variables les plus significatives. La recherche explore des procédés stochastiques, c'est-à-dire de sélection aléatoire des attributs (*compressive learning*).
@@ -433,8 +451,6 @@ On peut prouver que c'est équivalent à **maximiser la variance des composantes
 On démontre que les $u_m$ (vecteurs de la nouvelle base) sont les $M$ **vecteurs propres de la matrice de covariance** $X^TX$.
 
 Pour calculer PCA, on on peut utiliser la décomposition en valeurs propres et vecteurs propres, mais on lui préfère la **décomposition en valeurs singulières** (moins coûteuse en calcul et place mémoire).
-
-
 
 ### Analyse discriminante de Fisher
 
@@ -488,8 +504,6 @@ Quelques remarques sur cette méthode :
 
 - Les $\mu_k$ permettent d'avoir une représentation simplifiée des données.
 
-
-
 ### K-medoids
 
 L'objectif de cette méthode est d'identifier l'existence de clusters au sein de données non supervisées, **à partir des distances entre les points seulement**.
@@ -498,7 +512,7 @@ C'est une méthode qu'on peut utiliser quand on ne sait pas décrire $x_n$ (en p
 
 
 
-## Abres de décision et forêts
+## Arbres de décision
 
 Historiquement, c'est cette méthode qui était la plus largement utilisée avant la rupture du *deep learning* en 2012. Elle est encore utilisée aujourd'hui lorsqu'on manque de puissance et/ou de données pour mettre en oeuvre du *deep learning*. 
 
@@ -523,3 +537,299 @@ Il faut se demander :
 - Quelles sont les questions les plus utiles (**élagage**) ?
 
 On se contente de questions binaires pour des raisons de complexité calculatoire.
+
+
+
+#### Vocabulaire et propriétés
+
+- On appelle **feuille** un noeud sans enfants.
+
+- La profondeur de l'arbre est en $\mathcal O (\log(n))$ où $n$ est le nombre de données.
+
+- La partition est **hiérarchique**.
+
+- Au fur et à mesure des subdivisions, on a de moins en moins de données d'entraînement à utiliser.
+
+- Un noeud est dit **pur** si toutes les données associées à ce noeud sont dans la même classe.
+
+- Il existe différents critères d'arrêt :
+  
+  - Arriver à un noeud pur.
+  
+  - Arriver à un noeud où il ne reste plus qu'une seule donnée.
+  
+  - Se fixer un nombre minimal de données auquel on s'arrête. Cela permet d'éviter un éventuel *overfitting* (qui est un risque avec les critères précédents).
+
+
+
+### Extension à des données non binaires
+
+#### Données catégorielles ou quantitatives
+
+On se ramène à des questions binaires avec un *one hot encoding*.
+
+
+
+#### Attributs continus
+
+On utilise les données de l'ensemble d'entraînement comme les seuils possibles (discrétisation). Avec un nombre raisonnable de données, on peut se permettre de tester tous les seuils possibles.
+
+
+
+### Algorithme récursif
+
+Etant capable de construire un noeud, on peut construire un arbre récursivement sur les noeuds fils : 
+
+- On choisit une règle de partitionnement.
+
+- On choisit un critère à utiliser pour partitionner le noeud (*e.g.* seuil).
+
+- On choisit la décision à prendre à un noeud terminal (*e.g.* vote majoritaire).
+
+
+
+### Mesure d'impureté d'un noeud
+
+#### Définition
+
+Elle permet d'évaluer le pouvoir séparateur d'un noeud. Une telle fonction $\phi$ doit donc avoir les propriétés suivantes : 
+
+- Définie sur une loi de probabilité discrète $(p_1, \ldots, p_k)$ représentant la probabilité des classes.
+
+- Maximale en $(\frac{1}{K}, \ldots, \frac{1}{K})$ où $K$ est le nombre de classes, c'est-à-dire qu'on prend une décision au hasard.
+
+- Minimale en les vecteurs du type $(\ldots, 0,1,0 \ldots)$, c'est-à-dire qu'on classe avec certitude.
+
+- Invariante par permutation de l'ordre des classes.
+
+
+
+#### Exemples de fonctions d'impureté
+
+On note $p_{m,k}$ la fréquence de la classe $k$ au noeud $m$, et $d(m)$ la décision prise au noeud $m$.
+
+Les fonctions d'impureté usuelles sont les suivantes : 
+
+- **Erreur de classification**
+
+$$
+1 - p_{m, d(m)}
+$$
+
+
+
+- **Indice de Gini**
+
+$$
+\sum_{k=1}^K p_{m,k}(1-p_{m,k})
+$$
+
+
+
+- **Cross-entropy / déviance**
+
+$$
+- \sum_{k=1}^K p_{m,k} \log p_{m,k}
+$$
+
+Il est difficile de dire *a priori* laquelle donne les meilleures résultats : il faut choisir empiriquement.
+
+
+
+### Choix du sélecteur (partition d'un noeud)
+
+Soient $m_L$ et $m_R$ les noeuds fils gauche et droit du noeud $m$, et soient $\pi_L$ et $\pi_R$ les proportions de données partant respectivement dans ces noeuds fils.
+
+On évalue la qualité d'une partition $s$ par le critère : 
+
+$$
+\Delta \phi (s, m) = 
+\underbrace{\phi(p_m)}_{\text{impureté avant partition}} - 
+\underbrace{(\pi_L \phi(p_{m_L}) + \pi_R \phi(p_{m_R}))}_{\text{impureté après partition}}
+$$
+
+Pour maximiser ce critère, on peut : 
+
+- Essayer toutes les partitions à chaque noeud (coûteux).
+
+- Sous-échantilloner (*i.e.* se limiter au test de certains seuils).
+
+
+
+### Elagage (*Pruning*)
+
+On peut décider d'élaguer l'arbre suivant un critère de complexité pour éviter l'*overfitting*.
+
+Pour déterminer l'équilibre d'un arbre entre sa profondeur et son pouvoir séparateur, on utilise le critère de **coût-complexité** :
+
+$$
+C_{\alpha}(T) = \sum_{m=1}^{|T|} N_m \phi(p_m) + \alpha |T|
+$$
+
+où :
+
+- $T$ est l'arbre considéré, contenant $|T|$ noeuds.
+
+- $N_m$ est le nombre de données au noeud $m$.
+
+- $\phi(p_m)$ est la mesure d'impureté au noeud $m$.
+
+- $\alpha$ est un paramètre réglant la complexité de l'arbre.
+  
+  - Si $\alpha$ est grand, on favorise les arbres peu profonds (coût élevé).
+  
+  - Si $\alpha$ est faible, on autorise les arbres profonds.
+
+
+
+### Avantages et défauts des arbres de décision
+
+#### Avantages
+
+- Peu d'hypothèses paramétriques : adaptable à beaucoup de problèmes.
+
+- Interprétabilité : les paramètres et les seuils sont explicites.
+
+
+
+#### Défauts
+
+- Instabilité (grande variance) : la construction d'un arbre dépend énormément des données d'apprentissage.
+
+
+
+## Collections d'arbres
+
+### *Bagging* (*bootstrap aggregating*)
+
+C'est une technique de réduction de variance permettant de remédier à l'instabilité des arbres individuels. Elle repose sur deux principes : 
+
+- ***Bootstrap*** : création artificielle de plusieurs jeux de données en recombinant les données à disposition. On accepte d'avoir des doublons ou des données qui disparaissent.
+  
+  En conséquence, on peut évaluer sa performance sur les échantillons qui n'ont pas été sélectionnés : on parle d'***Out-of-Bag (OoB) error***.
+
+- **Agrégation** : création d'un arbre de décision pour chaque jeu de données.
+
+La prédiction de l'agrégation d'arbres est obtenue par vote majoritaire sur tous les arbres générés.
+
+L'inconvénient de cette méthode est la perte d'interprétabilité.
+
+
+
+### Forêts aléatoires (*Random forests*)
+
+On réutilise le principe du *bootstrap* mais on travaille avec des <u>sous-ensembles aléatoires d'attributs</u>.
+
+On peut en déduire l'impact de la présence ou non d'un attribut sur l'erreur de classification : on parle de ***feature importance***. Cela permet de faire de la sélection de variables.
+
+Les forêts sont une bonne méthode "*baseline*", c'est-à-dire une méthode performante et facile à implémenter à partir de laquelle on peut comparer d'autres méthodes.
+
+
+
+## *Boosting*
+
+Le principe du boosting est de combiner les décisions de plusieurs classifieurs "peu performants" pour obtenir une décision finale plus efficace.
+
+La différence avec le *bagging* est que les combinaisons sont pondérées et que l'entraînement se concentre sur les exemples difficiles à apprendre.
+
+
+
+### Boosting classique
+
+- On entraîne un estimateur $\phi_1$ sur toutes les données.
+
+- On entraîne un estimateur $\phi_2$ sur les données où $\phi_1$ a eu tort.
+
+- On entraîne un estimateur $\phi_3$ sur les données où $\phi_1$ et $\phi_2$ sont en désaccord.
+
+Une prédiction se fait alors par vote majoritaire entre les estimateurs.
+
+
+
+### Adaboost
+
+On emploie une méthode similaire où on ne se limite plus à trois classifieurs.
+
+On fait du *bootstrapping*, mais en pondérant les probabilités de tirage des exemples : les exemples plus difficiles à classer sont plus souvent tirés.
+
+On prend la décision finale en moyennant les décisions de tous les estimateurs, pondérées par leur fiabilité.
+
+
+
+## Séparateurs à Vaste Marge (*Support Vector Machines*, SVM)
+
+<img title="" src="https://fr.mathworks.com/discovery/support-vector-machine/_jcr_content/mainParsys/image.adapt.480.medium.jpg/1630399107086.jpg" alt="Support Vector Machine (SVM) - MATLAB & Simulink" data-align="center">
+
+### Problème d'optimisation
+
+Le principe des SVM est de trouver des hyperplans séparateurs qui maximisent la distance entre les classes (**marge**) pour augmenter les chances de classer correctement les points proches de la frontière. Les points permettant de définir la frontière sont appelés **vecteurs support**. Dans le cas où les données ne sont pas linéairement séparables, on introduit une tolérance pénalisée à l'entrée des points dans la marge (**variables ressort**).
+
+En résolvant le problème dual (*i.e.* formulation Lagrangienne), on n'a besoin que des vecteurs support dans les calculs. La solution du problème est donc **parcimonieuse** (peu de paramètres). 
+
+
+
+### Changement de représentation et notion de noyau
+
+Au lieu de chercher un hyperplan dans l'espace des données, on va le chercher dans un <u>espace de dimension supérieure</u> (souvent infinie) $\mathcal F$, puis revenir dans l'espace initial. Ainsi, la frontière de décision résultante est **non-linéaire**. De plus, l'algorithme détermine directement la frontière de décision : c'est une **fonction discriminante**.
+
+Pour résoudre ce problème d'optimisation, on n'a pas besoin de connaître la fonction de changement de base : on n'utilise que des produits scalaires pour les calculs de distance à l'hyperplan.
+
+
+
+#### Noyau
+
+On démontre que pour une fonction $k(x, x')$ vérifiant les **conditions de Mercer**, *i.e.* $(k(x_i, x_j))_{i,j}$ est une matrice définie positive, alors il existe un changement de représentation $\phi$ tel que :
+
+$$
+k(x, x') = \langle \phi(x), \phi(x') \rangle
+$$
+
+Autrement dit, $k$ fait office de produit scalaire dans l'espace $\mathcal F$. On appelle cette fonction un **noyau**.
+
+Il existe des noyaux pour tous types de données : textes, arbres, graphes, *etc.*
+
+
+
+### Noyaux usuels
+
+- **Linéaire** :
+
+$$
+k(x, x') = x^Tx'
+$$
+
+- **Polynomial d'ordre $d$** : 
+
+$$
+k(x, x') = (x^Tx')^d
+$$
+
+- **Gaussien** :
+
+$$
+k(x, x') = \exp (-\gamma ||x-x'||^2)
+$$
+
+- **Réseau de neurones** :
+
+$$
+k(x, x') = \tanh (\kappa_1 x^Tx' + \kappa_2)
+$$
+
+
+
+### Propriétés
+
+- Pas de *minima* locaux : la solution trouvée est toujours optimale.
+
+- Contrôle du risque de surapprentissage grâce à la marge.
+
+- Robustesse aux *outliers* grâce à l'appui sur des vecteurs support.
+
+- Peu de paramètres à régler (contrairement aux réseaux de neurones).
+
+- Très bons résultats en général.
+
+- Généralisable à d'autres méthodes pour les rendre non-linéaires (*e.g.* PCA, analyse discriminante de Fisher, clustering, *etc.*).
+
+- Inconvénient : coût de calcul élevé pour un grand volume de données (peu adapté au Big Data).
