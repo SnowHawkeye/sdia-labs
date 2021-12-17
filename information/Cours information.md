@@ -10,6 +10,8 @@ Un scénario de sécurité se définit par :
 
 - Les moyens de l'adversaire.
 
+Le **principe de Kerckhoffs** dit que pour faire une analyse de sécurité, on a toutes les connaissances du processus (*e.g.* algorithmes utilisés) à l'exception d'une clé secrète.
+
 ### Mesures informationnelles en sécurité de l'information
 
 #### Objectif : Trouver une clé secrète $k$
@@ -40,7 +42,7 @@ $$
 D_{KL}(P_N, P_A) = \sum_x P_N(x) \log \frac{P_N(x)}{P_A(x)} = 0
 $$
 
-#### 
+
 
 #### Objectif : Estimer une clé à partir d'observations bruitées de cette clé
 
@@ -168,7 +170,7 @@ $$
 \hat m = \frac{\text{sign} \langle y, k \rangle + 1}{2}
 $$
 
-#### 
+
 
 #### Robustesse
 
@@ -221,8 +223,6 @@ w_i = \begin{cases}
 \end{cases}
 $$
 
-
-
 #### Scénario de sécurité n°1
 
 - On suppose le principe de Kerckhoffs : le schéma ($m$) est connu (cadre supervisé).
@@ -244,8 +244,6 @@ Solution générale :
 $$
 \hat k_1 = \frac{1}{\alpha N_o} \sum -(-1^m)y_i
 $$
-
-
 
 #### Scénario de sécurité n°2
 
@@ -270,5 +268,134 @@ On peut encore penser au clustering, mais on a toujours le même problème en gr
 Par définition, les tirages $m_1$ et $m_2$ sont indépendants. On peut donc utiliser une **analyse en composantes indépendantes** (*cf.* TP et fast ICA).
 
 
+
+## Stéganographie et stéganalyse
+
+### Introduction
+
+La **stéganographie** est l'insertion d'un message <u>indéctable</u> dans un contenu. Elle sert à cacher des informations sensibles. La principe différence avec le *watermarking* est la contrainte d'intédectabilité. 
+
+La **stéganalyse** est la détection de ces messages cachés. Elle est principalement utilisée par des agences de sécurité.
+
+Une bonne méthode de stéganographie donne une probabilité d'erreur de 50% (on ne détecte pas mieux que le hasard).
+
+L'image qui sert à cacher l'information est appelée ***cover***.
+
+On évaluera la sécurité de méthodes de stéganalyse d'après le principe de Kerckhoffs, càd que le stéganalyste connaît : 
+
+- L'algorithme d'insertion.
+
+- La taille du message inséré.
+
+- La façon dont les *cover* sont générés (*e.g.* quel type d'appareil photo a créé l'image).
+
+
+
+### Stéganographie
+
+#### Stéganographie par substitution de bit de poids faible
+
+Le bit de poids faible (LSB pour *Least Significant Bit*) correspond au bit de parité dans la représentation binaire d'un nombre (càd le dernier bit, vaut 0 si le nombre est pair).
+
+##### Insertion
+
+Entrées : 
+
+- message $m$ de taille $N_m$
+
+- clé $K$
+
+- image *cover* de taille $N_I$ codée en niveaux de gris sur 8 bits
+
+Sortie :
+
+- image "stégo"
+
+##### Définition : Taux d'insertion
+
+On définit le **taux d'insertion** $\alpha$, d'unité le <u>bit par pixel</u> (bpp) comme : 
+
+$$
+\alpha = \frac{N_m}{N_I}
+$$
+
+##### Algorithme
+
+La clé sélectionne les $N_m$ pixels qui coderont le message (vecteur $p$).
+
+> En pratique, on peut mélanger (permuter) les pixels de l'image avec une *seed* qui constitue la clé secrète. On choisit alors les $N_m$ premiers pixels, on insère le message, et on effectue la permutation inverse.
+
+Le message est substitué aux LSB des $N_m$ pixels sélectionnés : si on veut insérer un 0, les chiffres pairs restent pairs et les chiffres impairs deviennent pairs (inversement, pour insérer un 1 les chiffres impairs restent impairs).
+
+##### Décodage
+
+La connaissance de la clé permet de récupérer les $N_m$ pixels d'intérêt. Il suffit ensuite de lire les LSB sur ces pixels.
+
+##### Détection
+
+Dans le cas "facile" où $\alpha = 1$, 50% des pixels sont modifiés en moyenne (puisque certains restent les mêmes). Dans l'image stégo, il y a alors apparition de "marches" dans l'histogramme des valeurs (*e.g.* il y a la même proportion de 128 et 129, de 130 et 131, *etc.*).
+
+De façon générale, pour d'autres valeurs de $\alpha$ on aura le même type de phénomène.
+
+##### Variante un peu plus sûre : stéganographie $\pm 1$
+
+Pour pallier au problème précédent, on peut associer $\pm 1$ lorsqu'on change la parité d'un nombre, avec une probabilité 0.5 pour chaque.
+
+Sur le même principe, on peut faire une stéganographie JPEG en modifiant les coefficients DCT (utilisés pour la compression) plutôt que les pixels.
+
+##### Stéganographie adaptive
+
+Le défaut des méthodes précédentes est qu'elles sont détectables si des pixels sont modifiés dans des zones uniformes. La stéganographie adaptive privilégie l'insertion dans les textures de l'image.
+
+
+
+### Stéganalyse
+
+L'objectif est d'extraire des caractéristiques ou apprendre des classifieurs sensibles à l'insertion stéganographique.
+
+On peut également extraire des caractéristiques ou apprendre des régresseurs sensibles au taux d'insertion. On parle alors de stéganalyse quantitative.
+
+Remarques : 
+
+- On peut générer des images de classe stégo "à volonté" à partir d'images *cover*.
+
+- Il est facile de labelliser les images.
+
+- On peut effectuer un apprentissage par "paires" (*cover*, stégo).
+
+
+
+#### Exemple 1 : Caractéristiques pour la stéganalyse (SPAM)
+
+En résumé, les caractéristiques sont les *bin* d'un histogramme multivarié (au lieu de considérer chaque pixel, on considère un certain nombre $n$ d'échantillons voisins).
+
+Puisqu'on a un histogramme en dimension $n$, on a deux problèmes : 
+
+- Malédiction de la dimension.
+  
+  - S'il y a des variations sur $m$ valeurs, il y a alors $m^n$ bins par caractéristique. Il faut donc veiller à ce que $m$ et $n$ soient faibles.
+
+- L'information sur le signal stégo réside dans les variations fines de l'image.
+  
+  - Solution : calculer des dérivées premières pour capter les variations.
+
+##### Algorithme
+
+- Soit un $p$-uplet de $n+1$ pixels voisins $[p_1, \ldots, p_{n+1}]$.
+
+- On calcule les "dérivées premières" ($d_1 = p_1 - p_2$, *etc.*). On peut le faire dans les huit directions de parcours.
+
+- Pour diminuer $m$, on va "tronquer" les dérivées : 
+
+$$
+\begin{cases}
+d_i \leftarrow T & \text{si } d_i \ge T \\
+d_i \leftarrow -T & \text{si } d_i < T
+\end{cases}
+$$
+
+- Les caractéristiques correspondent à un histogramme construit en observant $[d_1, \ldots, d_n]$ pour chaque pixel de l'image. On a $(2T+1)^n$ caractéristiques.
+
+- On peut moyenner les histogrammes donnés par les différents parcours : gauche/droit et haut/bas vont ensemble, les directions diagonales forment un deuxième groupe, et on concatène (on sépare car les distances entre deux pixels sont différentes dans les deux cas). Au total, on a donc $2 \times (2T+1)^n$ caractéristiques.
 
 
