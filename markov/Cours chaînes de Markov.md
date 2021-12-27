@@ -12,7 +12,7 @@ Utilitaires :
 
 ### Cadre
 
-On se donne $(\Omega, \mathcal{F}, \mathbb{P})$ un espace probabilisé, et $\mathcal{S}$ un enemble **d'états** fini (discret ou dénombrable). 
+On se donne $(\Omega, \mathcal{F}, \mathbb{P})$ un espace probabilisé, et $\mathcal{S}$ un ensemble **d'états** fini (discret ou dénombrable). 
 
 On note $n \in \mathbb{N}$ le **temps** et on se donne une suite $(X_n)$ de variables aléatoires à valeurs dans $\mathcal{S}$.
 
@@ -21,7 +21,7 @@ On note $n \in \mathbb{N}$ le **temps** et on se donne une suite $(X_n)$ de vari
 $X_n$ est une **chaîne de Markov à temps discret** si :
 
 $$
-\mathbb{P}(X_n = i_n | X_{n-1} = i_{n-1}, \ldots, X_0 = i_0) = \mathbb{P}(X_n = i_n | X_{n-1})
+\mathbb{P}(X_n = i_n | X_{n-1} = i_{n-1}, \ldots, X_0 = i_0) = \mathbb{P}(X_n = i_n | X_{n-1} = i_{n-1})
 $$
 
 ### Matrice de transition d'une chaîne de Markov
@@ -411,8 +411,6 @@ $$
 \theta_n = \frac{\text{cste}}{n}
 $$
 
-
-
 ## Processus de Poisson à temps continu
 
 ### Processus de Markov à temps continu
@@ -427,8 +425,6 @@ $$
 $$
 
 Et on ne considèrera que des processus homogènes.
-
-
 
 #### Matrice de transition
 
@@ -465,8 +461,6 @@ $$
 A = \lim_{t \rightarrow 0^+} \frac{P(t) - Id}{t}
 $$
 
-
-
 ### Comportement asymptotique des processus de Markov
 
 #### Lemme : probabilité invariante et générateur infinitésimal
@@ -479,8 +473,6 @@ $$
 
 L'équivalence ci-dessus peut être prouvée.
 
-
-
 #### Définition : irréductibilité
 
 Un PDM est dit **irréductible** si :
@@ -489,8 +481,6 @@ $$
 \forall t > 0, P_{ij}(t) > 0
 $$
 
-
-
 #### Théorème ergodique
 
 Soit $X^t$ un PDM <u>irréductible</u>. On a les résultats de convergence suivants :
@@ -498,7 +488,7 @@ Soit $X^t$ un PDM <u>irréductible</u>. On a les résultats de convergence suiva
 - Une convergence "en moyenne" :
 
 $$
-\frac{1}{t} \int_0^t \chi_{\{ X_t = i \}} ds \rightarrow \pi_i
+\frac{1}{t} \int_0^t \chi_{\{ X_s = i \}} ds \rightarrow \pi_i
 $$
 
 - Si il existe une unique probabilité invariante $\pi$, alors on a deux cas :
@@ -517,8 +507,6 @@ $$
   
   On définira par la suite les états récurrents et transitoires.
 
-
-
 ### Processus de Poisson à temps continu
 
 #### Définition : Processus de Poisson
@@ -536,8 +524,6 @@ $$
 
 En français : on reste sur une marche pendant un temps aléatoire $T_k$, au bout duquel on monte d'une marche, et on recommence. La variable $N_t$ compte le nombres de marches gravies en un temps $t$.
 
-
-
 #### Théorème : Propriétés sur les processus de Poisson
 
 - $N_t$ est suit une loi de Poisson de paramètre $\lambda t$.
@@ -545,8 +531,6 @@ En français : on reste sur une marche pendant un temps aléatoire $T_k$, au bou
 - Les incréments du processus sont indépendants : pour toute suite croissante $t_j$, les variables aléatoires $N_{t_{j+1}} - N_{t_{j}}$ sont indépendantes.
 
 - Les incréments sont stationnaires : $N_{t+s} - N_s \sim_{\mathcal L} N_t$.
-
-
 
 #### Définition : Chaîne de Markov induite associée au processus de Poisson
 
@@ -562,8 +546,6 @@ $$
 
 puisqu'on ne peut que "monter les marches".
 
-
-
 #### Définition : Processus récurrent ou transitoire
 
 Soit $Y_n$ la chaîne induite d'un processus <u>irréductible</u> $X_t$. On dit alors que :
@@ -571,8 +553,6 @@ Soit $Y_n$ la chaîne induite d'un processus <u>irréductible</u> $X_t$. On dit 
 - $X_t$ est **récurrent** si $Y_n$ est récurrente.
 
 - X_t est **transitoire** si $Y_n$ est transitoire.
-
-
 
 #### Proposition : Lien entre $Q$ et $A$ pour un processus de Poisson
 
@@ -588,8 +568,6 @@ $$
 
 avec $\lambda_i$ le temps moyen d'attente en $i$.
 
-
-
 #### Proposition : Loi suivie par le temps de "repos" en un site
 
 On considère un processus à saut général. On place sur chaque site $j$ un "réveil" dont le temps de sonnerie suit une loi exponentielle de paramètre $\lambda_j$.
@@ -600,8 +578,6 @@ $$
 \mathbb P(t < \min_j T_j) 
 = e^{-(\lambda_1 + \lambda_2 + \ldots + \lambda_i)t}
 $$
-
-
 
 ### Processus de vie et de mort
 
@@ -619,8 +595,6 @@ a_{ii-1} = \delta_i \\
 a_{ij} = 0 & \text{sinon}
 \end{cases}
 $$
-
-
 
 ## Notion de file d'attente
 
@@ -641,7 +615,5 @@ Avec :
 - $C$ le nombre de serveurs.
 
 - $K$ la taille globale de la salle d'attente. Dans la suite, on prendra $K = \infty$.
-
-
 
 Lorsque $A$ et $B$ suivent des lois exponentielles, on retrouve un processus de vie (arrivée d'un client) et de mort (sortie d'un client).
