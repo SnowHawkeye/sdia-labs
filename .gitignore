@@ -144,3 +144,4 @@ cython_debug/
 db/tp1/tmp/
 .pytest_cache/
 .DS_Store
+information/tp2/Features
