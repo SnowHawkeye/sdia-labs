@@ -237,7 +237,7 @@ class PlayResults():
         cumulative_rewards = np.sum(self.rewards_obtained[:until])
         return until * max_reward - cumulative_rewards
 
-#################################### UTILITYFUNCTIONS ####################################
+#################################### UTILITY FUNCTIONS ####################################
 
 def gaussian_sampling(mean, std):
     """Samples a random number from a gaussian distribution.
