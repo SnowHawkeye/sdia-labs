@@ -136,7 +136,7 @@ class ETC_Agent(Agent):
         return PlayResults(chosen_arms, rewards_obtained, decision_time, env)
     
 
-class UCBAlphaAgent(Agent):
+class UCBAlpha_Agent(Agent):
     """An arm-pulling agent using the UCB_alpha strategy. Implemented for 2 arms, but could be generalized.
     """
     
